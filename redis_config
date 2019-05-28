@@ -33,3 +33,9 @@
                         dump($message);//接收到的信息
                         
                     }, "redis_config");
+
+//==============队列=================================================
+
+\RedisDB::lpush($redis_key, $redis_val); //将值插入到列表头部
+
+ $redis_info= \RedisDB::rpop($this->rpop_key); //移除列表的最后一个元素，返回值为移除的元素。
