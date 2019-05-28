@@ -12,8 +12,9 @@
  $redis_info = \RedisDB::get($redis_key);//设置读取缓存
 
 
- $isupdate = \RedisDB::setnx($Cachekey,$redis_val); //分布式锁 返回整数 1成功  0不处理
+ $isupdate = \RedisDB::setnx($redis_key,$redis_val); //分布式锁 返回整数 1成功  0不处理
 
+\RedisDB::del($redis_key); //删除缓存
 
 //================订阅======================================
 /**
@@ -38,4 +39,4 @@
 
 \RedisDB::lpush($redis_key, $redis_val); //将值插入到列表头部
 
- $redis_info= \RedisDB::rpop($this->redis_key); //移除列表的最后一个元素，返回值为移除的元素。
+ $redis_info= \RedisDB::rpop($redis_key); //移除列表的最后一个元素，返回值为移除的元素。
