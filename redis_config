@@ -13,3 +13,23 @@
 
 
  $isupdate = \RedisDB::setnx($Cachekey,$redis_val); //分布式锁 返回整数 1成功  0不处理
+
+
+//================订阅======================================
+/**
+  'redis_config' => [
+            'host'     => '127.0.0.1',
+            'port'     =>6379,
+            'database' => 0,
+            'password' => "",
+            'read_write_timeout'=> -1
+        ],**/
+\RedisDB::connection('redis_config')->publish($redis_key, $redis_val); //发布订阅
+
+ //psubscribe命令订阅一个或多个符合给定模式的频道
+ $redis_key2="ads:banner2";
+ \RedisDB::psubscribe([$redis_key,$redis_key2], function ($message) use ($that) {
+                    
+                        dump($message);//接收到的信息
+                        
+                    }, "redis_config");
