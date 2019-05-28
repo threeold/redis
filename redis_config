@@ -40,3 +40,21 @@
 \RedisDB::lpush($redis_key, $redis_val); //将值插入到列表头部
 
  $redis_info= \RedisDB::rpop($redis_key); //移除列表的最后一个元素，返回值为移除的元素。
+ 
+ 
+ //=============哈希(Hash) ===========================================
+ $redis_key="users:banner";//定义的key;
+ 
+ $uid=1; //用户ID
+ 
+ $is_exis = \RedisDB::hexists($redis_key, $uid); //命令用于查看哈希表的指定字段是否存在
+ 
+ \RedisDB::hset($redis_key, $uid, $redis_val); //命令用于为哈希表中的字段赋值 
+ 
+ $res_info = \RedisDB::hget($redis_key, $uid);//命令用于返回哈希表中指定字段的值。 
+ 
+ 
+ 
+ 
+ 
+ 
