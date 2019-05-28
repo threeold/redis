@@ -1,0 +1,8 @@
+ $redis_key="ads:banner";//定义的key，“：”隔开目录层级关系;
+ $redis_val="123a";//要缓存的值
+ $redis_info = \RedisDB::set($redis_key,redis_val);//设置缓存
+ 
+ $cache_time=86400;//缓存时间
+ \RedisDB::setex($redis_key, $cache_time, $redis_val);
+  
+ $redis_info = \RedisDB::get($redis_key);//设置读取缓存
