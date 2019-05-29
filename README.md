@@ -70,7 +70,7 @@ $isupdate = \RedisDB::setnx($redis_key,$redis_val);
  $res_info = \RedisDB::hget($redis_key, $uid);
  
  
- ## Set
+ ## Set 无序集合
  ###String 类型的无序集合,集合成员是唯一的，这就意味着集合中不能出现重复的数据。
  
  $redis_key="users:test";//定义的key;
@@ -79,7 +79,7 @@ $isupdate = \RedisDB::setnx($redis_key,$redis_val);
  $is_exis = \RedisDB::SADD($redis_key, $uid);  
 
  
- ## sorted set
+ ## sorted set 有序集合
  ### 有序集合和集合一样也是string类型元素的集合,且不允许重复的成员。
  
  不同的是每个元素都会关联一个double类型的分数。redis正是通过分数来为集合中的成员进行从小到大的排序。 
