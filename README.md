@@ -86,7 +86,7 @@ $isupdate = \RedisDB::setnx($redis_key,$redis_val);
  ### 命令将成员元素加入到集合中key 分数，值
   $isupdate = \RedisDB::ZADD($redis_key,$grade, $uid);  
   
-## reids乐观锁
+## reids乐观锁（先看库存再结合事务来处理）
         $redis_key = "xztest:goods_nums";
         $goods_nums = \RedisDB::get($redis_key);
         if (!isset($goods_nums)) {
@@ -111,6 +111,26 @@ $isupdate = \RedisDB::setnx($redis_key,$redis_val);
         }
  
  
- 
+## reids悲观锁（不管有没有库存先锁了再去处理）
+      $redis_key = "xztest:goods_nums";
+        //\RedisDB::set($redis_key, 10);
+        sleep(2);
+        $lock_key = "xztest:lock_test";
+        $is_lock = \RedisDB::setnx($lock_key, 1); // 加锁
+        if($is_lock){
+            $goods_nums = \RedisDB::get($redis_key);
+            if ($goods_nums > 0) {
+                \RedisDB::set($redis_key, $goods_nums - 1);
+                dump("抢到库存");exit;
+            }else{
+                dump("没有库存了");exit;
+            }
+            \RedisDB::del($lock_key); //删除锁
+        }else{
+            if (\RedisDB::ttl($lock_key) == -1) { 
+                \RedisDB::Expire($lock_key, 5); //防止死锁加个过期时间
+            }
+            dump("没有抢到库存");exit;
+        }
   
 //其他的命令请去看菜鸟教程
