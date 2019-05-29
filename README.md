@@ -86,7 +86,29 @@ $isupdate = \RedisDB::setnx($redis_key,$redis_val);
  ### 命令将成员元素加入到集合中key 分数，值
   $isupdate = \RedisDB::ZADD($redis_key,$grade, $uid);  
   
- 
+## reids乐观锁
+        $redis_key = "xztest:goods_nums";
+        $goods_nums = \RedisDB::get($redis_key);
+        if (!isset($goods_nums)) {
+            \RedisDB::set($redis_key, 10);
+        }
+        
+        //watch用于监视一个(或多个) key ，如果在事务执行之前这个(或这些) key 被其他命令所改动，那么事务将被打断
+        
+        \RedisDB::watch($redis_key); 
+        if ($goods_nums > 0) {
+            sleep(2);
+            \RedisDB::multi(); //开启事务
+            \RedisDB::set($redis_key, $goods_nums - 1);
+            $res = \RedisDB::EXEC(); //事务提交
+            if ($res == null || empty($res)) {
+                dump("没有抢到");
+                exit;
+            } else {
+                dump("抢到库存");
+                exit;
+            }
+        }
  
  
  
